@@ -55,14 +55,14 @@ fn build_ui(application: &gtk::Application) {
             if let Err(e) = stream.read_to_string(&mut messages){
                 println!("Couldn't read tcp packet into string [rating] (ignoring frame)");
                 println!("Error: {}", e);
-                return
+                continue
             };
 
             let ratings: Vec<Rating> = serde_json::from_str(&messages).unwrap();
             if let Err(e) = tx.send(ratings){
                 println!("Couldn't send out a signal in GTK stack [rating] (ignoring frame)");
                 println!("Error: {}", e);
-                return
+                continue
             };
         }
     });
@@ -77,13 +77,13 @@ fn build_ui(application: &gtk::Application) {
             if let Err(e) = stream.read_to_string(&mut current_web_cam_image){
                 println!("Couldn't read tcp packet into string [live feed] (ignoring frame)");
                 println!("Error: {}", e);
-                return
+                continue
             };
 
             if let Err(e) = tx2.send(current_web_cam_image){
                 println!("Couldn't send out a signal in GTK stack [live feed] (ignoring frame)");
                 println!("Error: {}", e);
-                return
+                continue
             };
         }
     });
